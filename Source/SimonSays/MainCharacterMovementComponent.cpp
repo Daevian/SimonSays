@@ -55,6 +55,8 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         FHitResult hit;
         MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);
     }
-
-    m_isMoving = false;
+    else
+    {
+        m_isMoving = false;
+    }
 }
