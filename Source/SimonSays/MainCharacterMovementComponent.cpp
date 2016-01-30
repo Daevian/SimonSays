@@ -5,6 +5,10 @@
 
 
 
+UMainCharacterMovementComponent::UMainCharacterMovementComponent()
+{
+}
+
 void UMainCharacterMovementComponent::InitializeComponent()
 {
     Super::InitializeComponent();
@@ -25,6 +29,13 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         FHitResult hit;
         SafeMoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation(), true, hit);
 
-
+        if (desiredMovementThisFrame.X < 0.0f)
+        {
+            m_direction = FacingDirection::Left;
+        }
+        else if (desiredMovementThisFrame.X > 0.0f)
+        {
+            m_direction = FacingDirection::Right;
+        }
     }
 }

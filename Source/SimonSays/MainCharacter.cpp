@@ -45,6 +45,40 @@ void AMainCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
+    UpdateCharacter();
+
+}
+
+void AMainCharacter::UpdateCharacter()
+{
+    UpdateDirection();
+}
+
+void AMainCharacter::UpdateDirection()
+{
+    if (m_movementComponent)
+    {
+        auto direction = m_movementComponent->GetDirection();
+
+        if (this->Controller != nullptr)
+        {
+            switch (direction)
+            {
+                case FacingDirection::Left:
+                {
+                    this->Controller->SetControlRotation(FRotator(0.0, 180.0f, 0.0f));
+                } break;
+
+                case FacingDirection::Right:
+                {
+                    this->Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
+                } break;
+
+                default:
+                    break;
+            }
+        }
+    }
 }
 
 // Called to bind functionality to input
