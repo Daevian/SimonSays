@@ -4,6 +4,7 @@
 #include "MainCharacter.h"
 #include "PaperFlipbookComponent.h"
 #include "MainCharacterMovementComponent.h"
+#include "Room.h"
 
 FName AMainCharacter::c_spriteComponentName(TEXT("Sprite0"));
 FName AMainCharacter::c_movementComponentName(TEXT("MainMoveComp"));
@@ -11,10 +12,7 @@ FName AMainCharacter::c_movementComponentName(TEXT("MainMoveComp"));
 // Sets default values
 AMainCharacter::AMainCharacter(const class FObjectInitializer& objectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
-
-    m_movementComponent = CreateDefaultSubobject<UMainCharacterMovementComponent>(c_movementComponentName);
-    m_movementComponent->UpdatedComponent = this->RootComponent;
+    PrimaryActorTick.bCanEverTick = true;
 
     m_sprite = CreateOptionalDefaultSubobject<UPaperFlipbookComponent>(c_spriteComponentName);
     if (m_sprite)
@@ -30,20 +28,24 @@ AMainCharacter::AMainCharacter(const class FObjectInitializer& objectInitializer
         m_sprite->bGenerateOverlapEvents = false;
     }
 
+    m_movementComponent = CreateDefaultSubobject<UMainCharacterMovementComponent>(c_movementComponentName);
+    m_movementComponent->UpdatedComponent = this->RootComponent;
+    m_movementComponent->SetCharacter(this);
+
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
+    
 }
 
 // Called every frame
 void AMainCharacter::Tick(float deltaTime)
 {
-	Super::Tick(deltaTime);
+    Super::Tick(deltaTime);
 
     UpdateCharacter();
 
@@ -51,6 +53,7 @@ void AMainCharacter::Tick(float deltaTime)
 
 void AMainCharacter::UpdateCharacter()
 {
+    SetCurrentRoom(m_currentRoom);
     UpdateDirection();
 }
 
@@ -84,7 +87,7 @@ void AMainCharacter::UpdateDirection()
 // Called to bind functionality to input
 void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputComponent)
 {
-	Super::SetupPlayerInputComponent(inputComponent);
+    Super::SetupPlayerInputComponent(inputComponent);
 
     InputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
@@ -104,6 +107,19 @@ void AMainCharacter::PostInitializeComponents()
                 m_sprite->PrimaryComponentTick.AddPrerequisite(GetMovementComponent(), GetMovementComponent()->PrimaryComponentTick);
             }
         }
+    }
+}
+
+void AMainCharacter::SetCurrentRoom(ARoom* room)
+{
+    m_currentRoom = room;
+    if (m_currentRoom)
+    {
+        float floorZ = m_currentRoom->GetFloorZ();
+        FVector location = GetActorLocation();
+        location.Z = floorZ;
+        location += this->PivotOffset;
+        SetActorLocation(location);
     }
 }
 

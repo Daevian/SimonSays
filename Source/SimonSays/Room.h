@@ -12,12 +12,17 @@ UCLASS()
 class SIMONSAYS_API ARoom : public APaperSpriteActor
 {
     GENERATED_BODY()
+
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", Meta = (BlueprintProtected = "true"))
+    float m_floorXOffset = 70.0f;
+
     
 public:
     ARoom();
     ~ARoom();
 
-
+    float GetFloorZ() const;
     
     
     

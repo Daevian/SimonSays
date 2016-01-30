@@ -35,7 +35,7 @@ void ASimonSaysGameMode::BeginPlay()
     {
         if (m_rooms.Num() > 0)
         {
-            //character->SetCurrentRoom(m_rooms[0]);
+            character->SetCurrentRoom(m_rooms[0]);
         }
     }
 

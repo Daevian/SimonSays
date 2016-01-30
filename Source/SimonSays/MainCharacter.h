@@ -6,11 +6,16 @@
 #include "MainCharacter.generated.h"
 
 class UMainCharacterMovementComponent;
+class ARoom;
 
 UCLASS()
 class SIMONSAYS_API AMainCharacter : public APawn
 {
     GENERATED_BODY()
+
+public:
+    UFUNCTION(BlueprintPure, Category = "Room")
+    ARoom* GetCurrentRoom() const { return m_currentRoom; }
 
 protected:
     // The animation to play while running around
@@ -42,10 +47,11 @@ public:
 
     virtual void PostInitializeComponents() override;
 
+    void SetCurrentRoom(ARoom* room);
+
     virtual UPawnMovementComponent* GetMovementComponent() const override;
 
     FORCEINLINE class UPaperFlipbookComponent* GetSprite() const { return m_sprite; }
-
 
 private:
     void UpdateCharacter();
@@ -55,6 +61,6 @@ private:
     static FName c_spriteComponentName;
     static FName c_movementComponentName;
     
-    
+    ARoom* m_currentRoom = nullptr;
     
 };
