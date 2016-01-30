@@ -13,6 +13,13 @@ UCLASS(minimalapi)
 class ASimonSaysGameMode : public AGameMode
 {
 	GENERATED_BODY()
+
+
+
+
+
 public:
 	ASimonSaysGameMode();
+
+
 };
