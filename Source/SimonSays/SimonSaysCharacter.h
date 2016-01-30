@@ -13,6 +13,7 @@
 //   The Sprite component (inherited from APaperCharacter) handles the visuals
 
 class UTextRenderComponent;
+class ARoom;
 
 UCLASS(config=Game)
 class ASimonSaysCharacter : public APaperCharacter
@@ -45,34 +46,29 @@ private:
 ///////////////////////////////////////////////////////////////////
 
 public:
-    ASimonSaysCharacter();
+    ASimonSaysCharacter(const FObjectInitializer& ObjectInitializer);
 
     /** Returns SideViewCameraComponent subobject **/
     FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
     /** Returns CameraBoom subobject **/
     FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
+    void SetCurrentRoom(ARoom* room);
+
 protected:
-    /** Called to choose the correct animation to play based on the character's movement state */
+
     void UpdateAnimation();
 
-    /** Called for side to side input */
     void MoveRight(float Value);
 
     void UpdateCharacter();
 
-    /** Handle touch inputs. */
-    void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
-
-    /** Handle touch stop event. */
-    void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
-
-    // APawn interface
     virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-    // End of APawn interface
 
 private:
     UTextRenderComponent* TextComponent;
     virtual void Tick(float DeltaSeconds) override;
+
+    ARoom* m_currentRoom = nullptr;
 
 };
