@@ -2,14 +2,11 @@
 
 #pragma once
 
-#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "MainCharacterMovementComponent.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class SIMONSAYS_API UMainCharacterMovementComponent : public UCharacterMovementComponent
+class SIMONSAYS_API UMainCharacterMovementComponent : public UFloatingPawnMovement
 {
     GENERATED_BODY()
     

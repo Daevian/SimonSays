@@ -3,15 +3,20 @@
 #include "SimonSays.h"
 #include "MainCharacter.h"
 #include "PaperFlipbookComponent.h"
+#include "MainCharacterMovementComponent.h"
 
-FName AMainCharacter::SpriteComponentName(TEXT("Sprite0"));
+FName AMainCharacter::c_spriteComponentName(TEXT("Sprite0"));
+FName AMainCharacter::c_movementComponentName(TEXT("MainMoveComp"));
 
 // Sets default values
-AMainCharacter::AMainCharacter()
+AMainCharacter::AMainCharacter(const class FObjectInitializer& objectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-    m_sprite = CreateOptionalDefaultSubobject<UPaperFlipbookComponent>(AMainCharacter::SpriteComponentName);
+    m_movementComponent = CreateDefaultSubobject<UMainCharacterMovementComponent>(c_movementComponentName);
+    m_movementComponent->UpdatedComponent = this->RootComponent;
+
+    m_sprite = CreateOptionalDefaultSubobject<UPaperFlipbookComponent>(c_spriteComponentName);
     if (m_sprite)
     {
         m_sprite->AlwaysLoadOnClient = true;
@@ -24,6 +29,8 @@ AMainCharacter::AMainCharacter()
         m_sprite->SetCollisionProfileName(CollisionProfileName);
         m_sprite->bGenerateOverlapEvents = false;
     }
+
+    AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 // Called when the game starts or when spawned
@@ -45,6 +52,8 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputCompo
 {
 	Super::SetupPlayerInputComponent(inputComponent);
 
+    InputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
+
 }
 
 void AMainCharacter::PostInitializeComponents()
@@ -64,3 +73,16 @@ void AMainCharacter::PostInitializeComponents()
     }
 }
 
+UPawnMovementComponent* AMainCharacter::GetMovementComponent() const
+{
+    return m_movementComponent;
+}
+
+void AMainCharacter::MoveRight(float axisValue)
+{
+    if (m_movementComponent && (m_movementComponent->UpdatedComponent == RootComponent))
+    {
+        const FVector right(1.0f, 0.0f, 0.0f);
+        m_movementComponent->AddInputVector(right * axisValue);
+    }
+}
