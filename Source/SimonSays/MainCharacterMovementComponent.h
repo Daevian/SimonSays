@@ -18,12 +18,14 @@ class SIMONSAYS_API UMainCharacterMovementComponent : public UPawnMovementCompon
 {
     GENERATED_BODY()
  
+public:
+    UFUNCTION(BlueprintPure, Category = "Movement")
+    float GetIsMoving() const { return m_isMoving; }
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", Meta = (BlueprintProtected = "true"))
     float m_walkSpeed = 300.0f;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (BlueprintProtected = "true"))
-    bool m_isMoving = false;
 
 
 
@@ -45,5 +47,6 @@ private:
     FacingDirection m_direction = FacingDirection::Right;
 
     AMainCharacter* m_character = nullptr;
+    bool m_isMoving = false;
     
 };
