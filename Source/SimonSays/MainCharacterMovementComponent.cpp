@@ -2,11 +2,17 @@
 
 #include "SimonSays.h"
 #include "MainCharacterMovementComponent.h"
+#include "MainCharacter.h"
 
 
 
 UMainCharacterMovementComponent::UMainCharacterMovementComponent()
 {
+}
+
+void UMainCharacterMovementComponent::SetCharacter(AMainCharacter* character)
+{
+    m_character = character;
 }
 
 void UMainCharacterMovementComponent::InitializeComponent()
@@ -23,12 +29,10 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         return;
     }
 
-    FVector desiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * deltaTime * 150.0f;
+    FVector desiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * deltaTime * m_walkSpeed;
     if (!desiredMovementThisFrame.IsNearlyZero())
     {
-        FHitResult hit;
-        SafeMoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation(), true, hit);
-
+        m_isMoving = true;
         if (desiredMovementThisFrame.X < 0.0f)
         {
             m_direction = FacingDirection::Left;
@@ -37,5 +41,20 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         {
             m_direction = FacingDirection::Right;
         }
+
+        //if (m_character)
+        //{
+        //    if (auto* room = m_character->GetCurrentRoom())
+        //    {
+        //        // lock to floor
+        //        room->GetFloorX();
+        //    }
+        //}
+
+        
+        FHitResult hit;
+        MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);
     }
+
+    m_isMoving = false;
 }
