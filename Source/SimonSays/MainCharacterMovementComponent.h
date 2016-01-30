@@ -20,7 +20,7 @@ class SIMONSAYS_API UMainCharacterMovementComponent : public UPawnMovementCompon
  
 public:
     UFUNCTION(BlueprintPure, Category = "Movement")
-    float GetIsMoving() const { return m_isMoving; }
+    bool GetIsMoving() const { return m_isMoving; }
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", Meta = (BlueprintProtected = "true"))
