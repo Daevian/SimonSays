@@ -7,11 +7,10 @@
 //
 // Place any includes here that are needed by the majority of your .cpp files
 
-#include "EngineMinimal.h"
+#include "Engine.h"
 
-//#include "Engine.h"
-//
-//DECLARE_LOG_CATEGORY_EXTERN(LogPaper2D, Verbose, All);
-//
-//#include "Paper2DClasses.h"
-//#include "Paper2DModule.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(LogPaper2D, Verbose, All);
+
+#include "Paper2DClasses.h"
+#include "Paper2DModule.h"

@@ -3,9 +3,10 @@
 #pragma once
 
 #include "GameFramework/PawnMovementComponent.h"
+#include "MainCharacter.h"
 #include "MainCharacterMovementComponent.generated.h"
 
-class AMainCharacter;
+//class AMainCharacter;
 
 enum class FacingDirection
 {

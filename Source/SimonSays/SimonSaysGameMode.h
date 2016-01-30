@@ -10,7 +10,7 @@
 // This game mode just sets the default pawn to be the MyCharacter asset, which is a subclass of SimonSaysCharacter
 
 class ARoom;
-
+class ARoomGrid;
 
 UCLASS(minimalapi)
 class ASimonSaysGameMode : public AGameMode
@@ -19,13 +19,13 @@ class ASimonSaysGameMode : public AGameMode
 
 public:
     ASimonSaysGameMode();
+    ~ASimonSaysGameMode();
 
-    
+    virtual void PostInitializeComponents() override;
     virtual void BeginPlay() override;
     virtual void Tick(float time) override;
 
 
 private:
-    TArray<ARoom*> m_rooms;
 
 };
