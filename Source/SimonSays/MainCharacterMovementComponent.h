@@ -15,7 +15,14 @@ UCLASS()
 class SIMONSAYS_API UMainCharacterMovementComponent : public UPawnMovementComponent
 {
     GENERATED_BODY()
-    
+ 
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", Meta = (BlueprintProtected = "true"))
+    float m_walkSpeed = 300.0f;
+
+
+
+//////////////////////////////////////////////////////////////////////////
 public:
     UMainCharacterMovementComponent();
 

@@ -25,6 +25,10 @@ private:
     UPROPERTY(Category = "Character", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     class UPaperFlipbookComponent* m_sprite = nullptr;
 
+    UPROPERTY(Category = "Character", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    UMainCharacterMovementComponent* m_movementComponent = nullptr;
+
+
 //////////////////////////////////////////////////////////////////////////
 
 public:
@@ -50,8 +54,7 @@ private:
 
     static FName c_spriteComponentName;
     static FName c_movementComponentName;
-
-    UMainCharacterMovementComponent* m_movementComponent = nullptr;
+    
     
     
 };

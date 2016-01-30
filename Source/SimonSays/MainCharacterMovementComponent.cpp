@@ -23,11 +23,11 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         return;
     }
 
-    FVector desiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * deltaTime * 150.0f;
+    FVector desiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * deltaTime * m_walkSpeed;
     if (!desiredMovementThisFrame.IsNearlyZero())
     {
         FHitResult hit;
-        SafeMoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation(), true, hit);
+        MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);
 
         if (desiredMovementThisFrame.X < 0.0f)
         {
