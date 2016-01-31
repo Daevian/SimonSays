@@ -13,9 +13,10 @@ class SIMONSAYS_API UActionActorComponent : public UActorComponent
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Action", Meta = (BlueprintProtected = "true"))
-		bool m_isCritical;
+	bool m_isCritical= false;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Action", Meta = (BlueprintProtected = "true"))
-	class USoundBase* m_soundFx;
+	class USoundBase* m_soundFx = nullptr;
 
 public:	
 	// Sets default values for this component's properties

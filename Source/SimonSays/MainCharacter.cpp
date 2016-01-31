@@ -39,6 +39,7 @@ AMainCharacter::AMainCharacter(const class FObjectInitializer& objectInitializer
 void AMainCharacter::BeginPlay()
 {
     Super::BeginPlay();
+	InputComponent->BindAction("PerformAction", IE_Released, this, &AMainCharacter::DoAction);
     
 }
 
@@ -177,4 +178,12 @@ void AMainCharacter::ClimbDown()
     {
         m_movementComponent->RequestClimbDown();
     }
+}
+
+void AMainCharacter::DoAction()
+{
+	if (nullptr != m_currentRoom)
+	{
+		m_currentRoom->DoAction();
+	}
 }

@@ -2,6 +2,7 @@
 
 #include "SimonSays.h"
 #include "Room.h"
+#include "ActionActorComponent.h"
 //#include "PaperSprite.h"
 
 
@@ -47,4 +48,13 @@ void ARoom::SetNeighbour(ARoom* room, RoomNeighbour neighbour)
 ARoom* ARoom::GetNeighbour(RoomNeighbour neighbour)
 {
     return m_neighbours[static_cast<size_t>(neighbour)];
+}
+
+bool ARoom::DoAction() const
+{
+	if (nullptr != m_actionComponent)
+	{
+		m_actionComponent->PlaySoundEffect();
+	}
+	return true;
 }

@@ -64,6 +64,8 @@ private:
     void ClimbUp();
     void ClimbDown();
 
+	void DoAction();
+
     static FName c_spriteComponentName;
     static FName c_movementComponentName;
     

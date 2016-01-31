@@ -14,6 +14,7 @@ enum class RoomNeighbour
     Down,
     Count,
 };
+class UActionActorComponent;
 
 UCLASS()
 class SIMONSAYS_API ARoom : public APaperSpriteActor
@@ -53,6 +54,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
     int32 m_gridY = 0;
+	 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
+	UActionActorComponent* m_actionComponent = nullptr;
 
     
 //////////////////////////////////////////////////////////////////////////
@@ -83,6 +87,8 @@ public:
     int32 GetRightWallXPos() const  { return m_rightWallXPos; }
     int32 GetLadderPos() const      { return m_ladderPos; }
     
+	bool DoAction() const;
+
 private:
     std::array<ARoom*, static_cast<size_t>(RoomNeighbour::Count)> m_neighbours;
     
