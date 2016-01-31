@@ -83,7 +83,7 @@ void ARoomGrid::PopulateRoomGrid()
                 spawnParams.Owner = this;
                 spawnParams.Instigator = this->Instigator;
 
-                const FVector location(0.0f);
+                const FVector location = this->GetActorLocation();
                 const FRotator rotation(0);
                 ARoom* room = world->SpawnActor<ARoom>(roomBP, location, rotation, spawnParams);
                 
@@ -121,10 +121,10 @@ bool ARoomGrid::SetRoom(ARoom* room, int gridX, int gridY)
 
 void ARoomGrid::SetNeighbours()
 {
-    for (int gridX = 0; gridX > m_width; gridX++)
+    for (int gridX = 0; gridX < m_width; gridX++)
 
     {
-        for (int gridY = 0; gridY > m_height; gridY++)
+        for (int gridY = 0; gridY < m_height; gridY++)
         {
             if (auto* room = m_roomGrid[gridX][gridY])
             {
@@ -143,7 +143,7 @@ void ARoomGrid::SetNeighbours()
                     room->SetNeighbour(m_roomGrid[gridX][gridY - 1], RoomNeighbour::Down);
                 }
 
-                if (gridY + 1 <= m_height)
+                if (gridY + 1 < m_height)
                 {
                     room->SetNeighbour(m_roomGrid[gridX][gridY + 1], RoomNeighbour::Up);
                 }
@@ -157,20 +157,21 @@ void ARoomGrid::SetNeighbours()
 
 void ARoomGrid::PositionRooms()
 {
-    int posX = 0;
+	const FVector location = this->GetActorLocation();
+    float posX = location.X;
 
     for (int gridX = 0; gridX < m_width; gridX++)
     {
-        int posY = 0;
+        float posZ = location.Z;
         for (int gridY = 0; gridY < m_height; gridY++)
         {
             if (auto* room = m_roomGrid[gridX][gridY])
             {
-                FVector position((float)posX, (float)posY, c_roomSpriteDepth);
+                FVector position(posX, c_roomSpriteDepth, posZ);
                 room->SetActorLocation(position);
             }
 
-            posY += c_texHeight;
+            posZ -= c_texHeight;
         }
 
         posX += c_texWidth;
