@@ -194,13 +194,14 @@ void ARoomGrid::UpdateCurrentRoom()
 			//Boundaries check
 			FVector characterPos = m_mainCharacter->GetActorLocation();
 			FVector roomPos = neighbour->GetActorLocation();
-			if (characterPos.X >= roomPos.X
-				&& characterPos.X <= roomPos.X + c_texWidth
-				&& characterPos.Z <= roomPos.Z
-				&& characterPos.Z >= roomPos.Z - c_texHeight)
+			if (characterPos.X >= roomPos.X - c_texWidth/2
+				&& characterPos.X <= roomPos.X + c_texWidth/2
+				&& characterPos.Z <= roomPos.Z + c_texHeight/2
+				&& characterPos.Z >= roomPos.Z - c_texHeight/2)
 			{
 				currentRoom = neighbour;
-				break;
+				m_mainCharacter->SetCurrentRoom(currentRoom);
+				return;
 			}
 		}
 	}
