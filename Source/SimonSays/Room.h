@@ -37,6 +37,11 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 public:
+
+    static const int c_width = 2048;
+    static const int c_height = 1024;
+    static const int c_wallXPos = 300;
+
     ARoom();
     ~ARoom();
 

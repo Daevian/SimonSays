@@ -47,11 +47,30 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         {
             if (auto* room = m_character->GetCurrentRoom())
             {
-                const float c_wallXPos = 30.0f;
-                FVector posInRoom = m_character->GetRelativePositionInRoom();
-                if (!room->GetNeighbour(RoomNeighbour::Left))
+                
+                const float halfRoomWidthWithWall = ARoom::c_width * 0.5f - ARoom::c_wallXPos;
+
+                FVector posInRoom = m_character->GetRelativePositionInRoom(); // pos should be center of room
+                FVector desiredPosInRoom = posInRoom - desiredMovementThisFrame;
+
+                // no neighbour == wall
+                // poor collision detection that won't work in low FPS (but hey, who gives a fucks?)
+                // hint: not me
+                if (!room->GetNeighbour(RoomNeighbour::Left) &&
+                    desiredMovementThisFrame.X < 0 &&
+                    desiredPosInRoom.X < -halfRoomWidthWithWall)
                 {
-                    
+                    desiredMovementThisFrame.X = 0;// (-halfRoomWidthWithWall) - desiredPosInRoom.X;
+                    m_isMoving = false;
+
+                }
+
+                if (!room->GetNeighbour(RoomNeighbour::Right) &&
+                    desiredMovementThisFrame.X > 0 &&
+                    desiredPosInRoom.X > halfRoomWidthWithWall)
+                {
+                    desiredMovementThisFrame.X = 0;// halfRoomWidthWithWall - desiredPosInRoom.X;
+                    m_isMoving = false;
                 }
             }            
 
