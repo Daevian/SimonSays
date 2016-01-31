@@ -3,6 +3,7 @@
 #include "SimonSays.h"
 #include "MainCharacterMovementComponent.h"
 #include "MainCharacter.h"
+#include "Room.h"
 
 
 
@@ -13,6 +14,16 @@ UMainCharacterMovementComponent::UMainCharacterMovementComponent()
 void UMainCharacterMovementComponent::SetCharacter(AMainCharacter* character)
 {
     m_character = character;
+}
+
+void UMainCharacterMovementComponent::RequestClimbUp()
+{
+    m_wantsToClimbUp = true;
+}
+
+void UMainCharacterMovementComponent::RequestClimbDown()
+{
+    m_wantsToClimbDown = true;
 }
 
 void UMainCharacterMovementComponent::InitializeComponent()
@@ -29,33 +40,87 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
         return;
     }
 
-    FVector desiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * deltaTime * m_walkSpeed;
-    if (!desiredMovementThisFrame.IsNearlyZero())
+    if (m_character)
     {
-        m_isMoving = true;
-        if (desiredMovementThisFrame.X < 0.0f)
+        if (auto* room = m_character->GetCurrentRoom())
         {
-            m_direction = FacingDirection::Left;
-        }
-        else if (desiredMovementThisFrame.X > 0.0f)
-        {
-            m_direction = FacingDirection::Right;
-        }
+            // handle climbing up
+            if (m_wantsToClimbUp)
+            {
+                if (room->HasLadderUp())
+                {
+                    if (auto* neighbour = room->GetNeighbour(RoomNeighbour::Up))
+                    {
+                        m_isMoving = false;
+                        m_character->TeleportToRoom(neighbour);
+                    }
+                }
+            }
 
-        //if (m_character)
-        //{
-        //    if (auto* room = m_character->GetCurrentRoom())
-        //    {
-        //        // lock to floor
-        //        room->GetFloorX();
-        //    }
-        //}
+            // handle climbing down
+            if (m_wantsToClimbDown)
+            {
+                if (room->HasLadderDown())
+                {
+                    if (auto* neighbour = room->GetNeighbour(RoomNeighbour::Down))
+                    {
+                        m_isMoving = false;
+                        m_character->TeleportToRoom(neighbour);
+                    }
+                }
+            }
 
-        FHitResult hit;
-        MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);
+            // handle left and right
+            FVector desiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * deltaTime * m_walkSpeed;
+            if (!desiredMovementThisFrame.IsNearlyZero())
+            {
+                m_isMoving = true;
+                if (desiredMovementThisFrame.X < 0.0f)
+                {
+                    m_direction = FacingDirection::Left;
+                }
+                else if (desiredMovementThisFrame.X > 0.0f)
+                {
+                    m_direction = FacingDirection::Right;
+                }
+
+
+                const float leftWallPos = room->GetLeftWallXPos();
+                const float rightWallPos = room->GetRightWallXPos();
+
+                FVector posInRoom = m_character->GetRelativePositionInRoom(); // pos should be center of room
+                FVector desiredPosInRoom = posInRoom - desiredMovementThisFrame;
+
+                // no neighbour == wall
+                // poor collision detection that won't work in low FPS (but hey, who gives a fucks?)
+                // hint: not me
+                if (!room->GetNeighbour(RoomNeighbour::Left) &&
+                    desiredMovementThisFrame.X < 0 &&
+                    desiredPosInRoom.X < leftWallPos)
+                {
+                    desiredMovementThisFrame.X = 0;
+                    m_isMoving = false;
+
+                }
+
+                if (!room->GetNeighbour(RoomNeighbour::Right) &&
+                    desiredMovementThisFrame.X > 0 &&
+                    desiredPosInRoom.X > rightWallPos)
+                {
+                    desiredMovementThisFrame.X = 0;
+                    m_isMoving = false;
+                }
+
+                FHitResult hit;
+                MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);
+            }
+            else
+            {
+                m_isMoving = false;
+            }
+        }
     }
-    else
-    {
-        m_isMoving = false;
-    }
+
+    m_wantsToClimbUp = false;
+    m_wantsToClimbDown = false;
 }
