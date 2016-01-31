@@ -9,7 +9,7 @@ const float ARoomGrid::c_roomSpriteDepth = -20.0f;
 
 ARoomGrid::ARoomGrid() 
 {
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void ARoomGrid::PostInitializeComponents()
@@ -37,14 +37,23 @@ void ARoomGrid::BeginPlay()
 
     if (auto* character = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
     {
-		m_mainCharacter = character;
+        m_mainCharacter = character;
         for (auto* actor : actorsFound)
         {
             if (auto* room = Cast<ARoom>(actor))
             {
                 if (room->IsStartingRoom())
                 {
-					m_mainCharacter->SetCurrentRoom(room);
+                    m_mainCharacter->SetCurrentRoom(room);
+
+                    // teleport to center of starting room
+                    auto characterPos = m_mainCharacter->GetActorLocation();
+                    auto roomPos = room->GetActorLocation();
+
+                    characterPos.X = roomPos.X;
+                    characterPos.Z = roomPos.Z;
+
+                    m_mainCharacter->SetActorLocation(characterPos);
                     break;
                 }
             }
@@ -55,7 +64,7 @@ void ARoomGrid::BeginPlay()
 
 void ARoomGrid::Tick(float time)
 {
-    if (m_debugDrawBounds)
+    /*if (m_debugDrawBounds)
     {
         if (auto* world = GetWorld())
         {
@@ -69,9 +78,9 @@ void ARoomGrid::Tick(float time)
             DrawDebugLine(world, bottomRight,   bottomLeft,     FColor(255, 0, 0), false, -1.0f, 0, 12.333f);
             DrawDebugLine(world, bottomLeft,    topLeft,        FColor(255, 0, 0), false, -1.0f, 0, 12.333f);
         }
-    }
+    }*/
 
-	UpdateCurrentRoom();
+    UpdateCurrentRoom();
 }
 
 void ARoomGrid::PopulateRoomGrid()
@@ -131,22 +140,30 @@ void ARoomGrid::SetNeighbours()
         {
             if (auto* room = m_roomGrid[gridX][gridY])
             {
-                if (gridX - 1 >= 0)
+                // left
+                if (gridX - 1 >= 0 &&
+                    room->HasDoorToTheLeft())
                 {
                     room->SetNeighbour(m_roomGrid[gridX - 1][gridY], RoomNeighbour::Left);
                 }
 
-                if (gridX + 1 < m_width)
+                // right
+                if (gridX + 1 < m_width &&
+                    room->HasDoorToTheRight())
                 {
                     room->SetNeighbour(m_roomGrid[gridX + 1][gridY], RoomNeighbour::Right);
                 }
 
-                if (gridY - 1 > 0)
+                // down
+                if (gridY - 1 > 0 &&
+                    room->HasLadderDown())
                 {
                     room->SetNeighbour(m_roomGrid[gridX][gridY - 1], RoomNeighbour::Down);
                 }
 
-                if (gridY + 1 < m_height)
+                // up
+                if (gridY + 1 < m_height &&
+                    room->HasLadderUp())
                 {
                     room->SetNeighbour(m_roomGrid[gridX][gridY + 1], RoomNeighbour::Up);
                 }
@@ -160,7 +177,7 @@ void ARoomGrid::SetNeighbours()
 
 void ARoomGrid::PositionRooms()
 {
-	const FVector location = this->GetActorLocation();
+    const FVector location = this->GetActorLocation();
     float posX = location.X;
 
     for (int gridX = 0; gridX < m_width; gridX++)
@@ -185,24 +202,24 @@ void ARoomGrid::PositionRooms()
 
 void ARoomGrid::UpdateCurrentRoom()
 {
-	ARoom* currentRoom = m_mainCharacter->GetCurrentRoom();
-	for (int i = 0; i < 4; i++)
-	{
-		ARoom* neighbour = currentRoom->GetNeighbour(i);
-		if (neighbour)
-		{
-			//Boundaries check
-			FVector characterPos = m_mainCharacter->GetActorLocation();
-			FVector roomPos = neighbour->GetActorLocation();
-			if (characterPos.X >= roomPos.X - c_texWidth/2
-				&& characterPos.X <= roomPos.X + c_texWidth/2
-				&& characterPos.Z <= roomPos.Z + c_texHeight/2
-				&& characterPos.Z >= roomPos.Z - c_texHeight/2)
-			{
-				currentRoom = neighbour;
-				m_mainCharacter->SetCurrentRoom(currentRoom);
-				return;
-			}
-		}
-	}
+    ARoom* currentRoom = m_mainCharacter->GetCurrentRoom();
+    for (int i = 0; i < 4; i++)
+    {
+        ARoom* neighbour = currentRoom->GetNeighbour(static_cast<RoomNeighbour>(i));
+        if (neighbour)
+        {
+            //Boundaries check
+            FVector characterPos = m_mainCharacter->GetActorLocation();
+            FVector roomPos = neighbour->GetActorLocation();
+            if (characterPos.X >= roomPos.X - c_texWidth/2
+                && characterPos.X <= roomPos.X + c_texWidth/2
+                && characterPos.Z <= roomPos.Z + c_texHeight/2
+                && characterPos.Z >= roomPos.Z - c_texHeight/2)
+            {
+                currentRoom = neighbour;
+                m_mainCharacter->SetCurrentRoom(currentRoom);
+                return;
+            }
+        }
+    }
 }

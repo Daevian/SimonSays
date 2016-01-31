@@ -3,6 +3,7 @@
 #include "SimonSays.h"
 #include "MainCharacterMovementComponent.h"
 #include "MainCharacter.h"
+#include "Room.h"
 
 
 
@@ -42,14 +43,39 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
             m_direction = FacingDirection::Right;
         }
 
-        //if (m_character)
-        //{
-        //    if (auto* room = m_character->GetCurrentRoom())
-        //    {
-        //        // lock to floor
-        //        room->GetFloorX();
-        //    }
-        //}
+        if (m_character)
+        {
+            if (auto* room = m_character->GetCurrentRoom())
+            {
+                
+                const float leftWallPos = room->GetLeftWallXPos();
+                const float rightWallPos = room->GetRightWallXPos();
+
+                FVector posInRoom = m_character->GetRelativePositionInRoom(); // pos should be center of room
+                FVector desiredPosInRoom = posInRoom - desiredMovementThisFrame;
+
+                // no neighbour == wall
+                // poor collision detection that won't work in low FPS (but hey, who gives a fucks?)
+                // hint: not me
+                if (!room->GetNeighbour(RoomNeighbour::Left) &&
+                    desiredMovementThisFrame.X < 0 &&
+                    desiredPosInRoom.X < leftWallPos)
+                {
+                    desiredMovementThisFrame.X = 0;
+                    m_isMoving = false;
+
+                }
+
+                if (!room->GetNeighbour(RoomNeighbour::Right) &&
+                    desiredMovementThisFrame.X > 0 &&
+                    desiredPosInRoom.X > rightWallPos)
+                {
+                    desiredMovementThisFrame.X = 0;
+                    m_isMoving = false;
+                }
+            }            
+
+        }
 
         FHitResult hit;
         MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);

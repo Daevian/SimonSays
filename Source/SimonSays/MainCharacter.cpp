@@ -134,6 +134,18 @@ UPawnMovementComponent* AMainCharacter::GetMovementComponent() const
     return m_movementComponent;
 }
 
+FVector AMainCharacter::GetRelativePositionInRoom() const
+{
+    if (auto* room = GetCurrentRoom())
+    {
+        FVector characterPos = GetActorLocation();
+        FVector roomPos = room->GetActorLocation();
+        return characterPos - roomPos;
+    }
+
+    return FVector(0.0f);
+}
+
 void AMainCharacter::MoveRight(float axisValue)
 {
     if (m_movementComponent && (m_movementComponent->UpdatedComponent == RootComponent))
