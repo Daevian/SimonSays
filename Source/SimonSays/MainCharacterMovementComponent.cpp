@@ -42,30 +42,38 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
 
     if (m_character)
     {
+        const FVector posInRoom = m_character->GetRelativePositionInRoom(); // pos should be center of room
+
         if (auto* room = m_character->GetCurrentRoom())
         {
+            int ladderPosInRoom = room->GetLadderPos();
+            bool isInsideLadderRegion = abs(posInRoom.X - ladderPosInRoom) <= (ARoom::c_ladderWidth * 0.5);
+            
             // handle climbing up
-            if (m_wantsToClimbUp)
+            if (isInsideLadderRegion)
             {
-                if (room->HasLadderUp())
+                if (m_wantsToClimbUp)
                 {
-                    if (auto* neighbour = room->GetNeighbour(RoomNeighbour::Up))
+                    if (room->HasLadderUp())
                     {
-                        m_isMoving = false;
-                        m_character->TeleportToRoom(neighbour);
+                        if (auto* neighbour = room->GetNeighbour(RoomNeighbour::Up))
+                        {
+                            m_isMoving = false;
+                            m_character->TeleportToRoom(neighbour);
+                        }
                     }
                 }
-            }
 
-            // handle climbing down
-            if (m_wantsToClimbDown)
-            {
-                if (room->HasLadderDown())
+                // handle climbing down
+                if (m_wantsToClimbDown)
                 {
-                    if (auto* neighbour = room->GetNeighbour(RoomNeighbour::Down))
+                    if (room->HasLadderDown())
                     {
-                        m_isMoving = false;
-                        m_character->TeleportToRoom(neighbour);
+                        if (auto* neighbour = room->GetNeighbour(RoomNeighbour::Down))
+                        {
+                            m_isMoving = false;
+                            m_character->TeleportToRoom(neighbour);
+                        }
                     }
                 }
             }
@@ -88,7 +96,6 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
                 const float leftWallPos = room->GetLeftWallXPos();
                 const float rightWallPos = room->GetRightWallXPos();
 
-                FVector posInRoom = m_character->GetRelativePositionInRoom(); // pos should be center of room
                 FVector desiredPosInRoom = posInRoom - desiredMovementThisFrame;
 
                 // no neighbour == wall

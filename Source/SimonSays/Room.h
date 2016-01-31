@@ -61,6 +61,7 @@ public:
 
     static const int c_width = 2048;
     static const int c_height = 1024;
+    static const int c_ladderWidth = 200;
 
     ARoom();
     ~ARoom();
