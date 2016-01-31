@@ -9,6 +9,7 @@ const float ARoomGrid::c_roomSpriteDepth = -20.0f;
 
 ARoomGrid::ARoomGrid() 
 {
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ARoomGrid::PostInitializeComponents()
@@ -36,13 +37,14 @@ void ARoomGrid::BeginPlay()
 
     if (auto* character = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
     {
+		m_mainCharacter = character;
         for (auto* actor : actorsFound)
         {
             if (auto* room = Cast<ARoom>(actor))
             {
                 if (room->IsStartingRoom())
                 {
-                    character->SetCurrentRoom(room);
+					m_mainCharacter->SetCurrentRoom(room);
                     break;
                 }
             }
@@ -69,6 +71,7 @@ void ARoomGrid::Tick(float time)
         }
     }
 
+	UpdateCurrentRoom();
 }
 
 void ARoomGrid::PopulateRoomGrid()
@@ -178,4 +181,27 @@ void ARoomGrid::PositionRooms()
     }
 
     // shift position of rooms to fit
+}
+
+void ARoomGrid::UpdateCurrentRoom()
+{
+	ARoom* currentRoom = m_mainCharacter->GetCurrentRoom();
+	for (int i = 0; i < 4; i++)
+	{
+		ARoom* neighbour = currentRoom->GetNeighbour(i);
+		if (neighbour)
+		{
+			//Boundaries check
+			FVector characterPos = m_mainCharacter->GetActorLocation();
+			FVector roomPos = neighbour->GetActorLocation();
+			if (characterPos.X >= roomPos.X
+				&& characterPos.X <= roomPos.X + c_texWidth
+				&& characterPos.Z <= roomPos.Z
+				&& characterPos.Z >= roomPos.Z - c_texHeight)
+			{
+				currentRoom = neighbour;
+				break;
+			}
+		}
+	}
 }

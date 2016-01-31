@@ -47,6 +47,7 @@ public:
     float IsStartingRoom() const { return m_isStartingRoom; }
 
     void SetNeighbour(ARoom* room, RoomNeighbour neighbour);
+	ARoom* GetNeighbour(int index);
     
 private:
     std::array<ARoom*, static_cast<size_t>(RoomNeighbour::Count)> m_neighbours;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "MainCharacter.h"
 #include "RoomGrid.generated.h"
 
 class ARoom;
@@ -40,6 +41,8 @@ public:
     void SetNeighbours();
     void PositionRooms();
 
+	void UpdateCurrentRoom();
+
 private:
     // hack - assume all rooms are 2048x1024, and that all rooms are in depth -20;
     static const int c_texWidth = 2048;
@@ -47,5 +50,6 @@ private:
     static const float c_roomSpriteDepth;;
 
     TArray<TArray<ARoom*>> m_roomGrid;
+	AMainCharacter* m_mainCharacter;
     
 };

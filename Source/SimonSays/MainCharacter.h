@@ -62,5 +62,7 @@ private:
     static FName c_movementComponentName;
     
     ARoom* m_currentRoom = nullptr;
+
+	FString m_debugStr;
     
 };
