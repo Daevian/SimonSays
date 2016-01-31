@@ -154,18 +154,18 @@ void ARoomGrid::SetNeighbours()
                     room->SetNeighbour(m_roomGrid[gridX + 1][gridY], RoomNeighbour::Right);
                 }
 
-                // down
-                if (gridY - 1 > 0 &&
-                    room->HasLadderDown())
-                {
-                    room->SetNeighbour(m_roomGrid[gridX][gridY - 1], RoomNeighbour::Down);
-                }
-
                 // up
-                if (gridY + 1 < m_height &&
+                if (gridY - 1 > 0 &&
                     room->HasLadderUp())
                 {
-                    room->SetNeighbour(m_roomGrid[gridX][gridY + 1], RoomNeighbour::Up);
+                    room->SetNeighbour(m_roomGrid[gridX][gridY - 1], RoomNeighbour::Up);
+                }
+
+                // down
+                if (gridY + 1 < m_height &&
+                    room->HasLadderDown())
+                {
+                    room->SetNeighbour(m_roomGrid[gridX][gridY + 1], RoomNeighbour::Down);
                 }
             }
         }

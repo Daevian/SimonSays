@@ -55,10 +55,14 @@ public:
 
     FVector GetRelativePositionInRoom() const;
 
+    void TeleportToRoom(ARoom* room);
+
 private:
     void UpdateCharacter();
     void UpdateDirection();
     void MoveRight(float axisValue);
+    void ClimbUp();
+    void ClimbDown();
 
     static FName c_spriteComponentName;
     static FName c_movementComponentName;
