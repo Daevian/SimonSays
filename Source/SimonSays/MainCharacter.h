@@ -53,22 +53,16 @@ public:
 
     FORCEINLINE class UPaperFlipbookComponent* GetSprite() const { return m_sprite; }
 
-    FVector GetRelativePositionInRoom() const;
-
-    void TeleportToRoom(ARoom* room);
-
 private:
     void UpdateCharacter();
     void UpdateDirection();
     void MoveRight(float axisValue);
-    void ClimbUp();
-    void ClimbDown();
 
     static FName c_spriteComponentName;
     static FName c_movementComponentName;
     
     ARoom* m_currentRoom = nullptr;
 
-    FString m_debugStr;
+	FString m_debugStr;
     
 };

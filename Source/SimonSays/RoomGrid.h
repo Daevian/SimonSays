@@ -23,6 +23,10 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "RoomGrid")
     int32 m_height = 0;
 
+    //not working
+    //UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "RoomGrid")
+    bool m_debugDrawBounds = true;
+
 //////////////////////////////////////////////////////////////////////////
 
 

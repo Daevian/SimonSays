@@ -44,7 +44,14 @@ void ARoom::SetNeighbour(ARoom* room, RoomNeighbour neighbour)
     m_neighbours[static_cast<size_t>(neighbour)] = room;
 }
 
-ARoom* ARoom::GetNeighbour(RoomNeighbour neighbour)
+ARoom* ARoom::GetNeighbour(int index)
 {
-    return m_neighbours[static_cast<size_t>(neighbour)];
+	if (index >= 0 && index < (int)RoomNeighbour::Count)
+	{
+		return m_neighbours[index];
+	}
+	else
+	{
+		return nullptr;
+	}
 }

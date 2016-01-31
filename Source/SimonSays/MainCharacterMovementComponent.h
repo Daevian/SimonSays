@@ -37,9 +37,6 @@ public:
     FacingDirection GetDirection() const { return m_direction; }
 
     void SetCharacter(AMainCharacter* character);
-
-    void RequestClimbUp();
-    void RequestClimbDown();
     
 protected:
 
@@ -52,7 +49,5 @@ private:
 
     AMainCharacter* m_character = nullptr;
     bool m_isMoving = false;
-    bool m_wantsToClimbUp = false;
-    bool m_wantsToClimbDown = false;
     
 };

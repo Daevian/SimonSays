@@ -28,27 +28,6 @@ protected:
     bool m_isStartingRoom = false;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    bool m_hasDoorToTheLeft = false;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    bool m_hasDoorToTheRight = false;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    bool m_hasLadderUp = false;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    bool m_hasLadderDown = false;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    int32 m_leftWallXPos = -700;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    int32 m_rightWallXPos = 700;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
-    int32 m_ladderPos = 0;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
     int32 m_gridX = 0;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Room", Meta = (BlueprintProtected = "true"))
@@ -58,10 +37,6 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 public:
-
-    static const int c_width = 2048;
-    static const int c_height = 1024;
-
     ARoom();
     ~ARoom();
 
@@ -72,15 +47,7 @@ public:
     float IsStartingRoom() const { return m_isStartingRoom; }
 
     void SetNeighbour(ARoom* room, RoomNeighbour neighbour);
-    ARoom* GetNeighbour(RoomNeighbour index);
-
-    bool HasDoorToTheLeft() const   { return m_hasDoorToTheLeft; }
-    bool HasDoorToTheRight() const  { return m_hasDoorToTheRight; }
-    bool HasLadderUp() const        { return m_hasLadderUp; }
-    bool HasLadderDown() const      { return m_hasLadderDown; }
-    int32 GetLeftWallXPos() const   { return m_leftWallXPos;  }
-    int32 GetRightWallXPos() const  { return m_rightWallXPos; }
-    int32 GetLadderPos() const      { return m_ladderPos; }
+	ARoom* GetNeighbour(int index);
     
 private:
     std::array<ARoom*, static_cast<size_t>(RoomNeighbour::Count)> m_neighbours;

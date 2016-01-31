@@ -90,8 +90,6 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputCompo
     Super::SetupPlayerInputComponent(inputComponent);
 
     InputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
-    InputComponent->BindAction("ClimbUp", IE_Pressed, this, &AMainCharacter::ClimbUp);
-    InputComponent->BindAction("ClimbDown", IE_Pressed, this, &AMainCharacter::ClimbDown);
 
 }
 
@@ -111,6 +109,8 @@ void AMainCharacter::PostInitializeComponents()
         }
     }
 }
+
+
 
 void AMainCharacter::SetCurrentRoom(ARoom* room)
 {
@@ -134,47 +134,11 @@ UPawnMovementComponent* AMainCharacter::GetMovementComponent() const
     return m_movementComponent;
 }
 
-FVector AMainCharacter::GetRelativePositionInRoom() const
-{
-    if (auto* room = GetCurrentRoom())
-    {
-        FVector characterPos = GetActorLocation();
-        FVector roomPos = room->GetActorLocation();
-        return characterPos - roomPos;
-    }
-
-    return FVector(0.0f);
-}
-
-void AMainCharacter::TeleportToRoom(ARoom* room)
-{
-    if (room)
-    {
-        SetCurrentRoom(room);
-    }
-}
-
 void AMainCharacter::MoveRight(float axisValue)
 {
     if (m_movementComponent && (m_movementComponent->UpdatedComponent == RootComponent))
     {
         const FVector right(1.0f, 0.0f, 0.0f);
         m_movementComponent->AddInputVector(right * axisValue);
-    }
-}
-
-void AMainCharacter::ClimbUp()
-{
-    if (m_movementComponent && (m_movementComponent->UpdatedComponent == RootComponent))
-    {
-        m_movementComponent->RequestClimbUp();
-    }
-}
-
-void AMainCharacter::ClimbDown()
-{
-    if (m_movementComponent && (m_movementComponent->UpdatedComponent == RootComponent))
-    {
-        m_movementComponent->RequestClimbDown();
     }
 }
