@@ -48,7 +48,8 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
             if (auto* room = m_character->GetCurrentRoom())
             {
                 
-                const float halfRoomWidthWithWall = ARoom::c_width * 0.5f - ARoom::c_wallXPos;
+                const float leftWallPos = room->GetLeftWallXPos();
+                const float rightWallPos = room->GetRightWallXPos();
 
                 FVector posInRoom = m_character->GetRelativePositionInRoom(); // pos should be center of room
                 FVector desiredPosInRoom = posInRoom - desiredMovementThisFrame;
@@ -58,18 +59,18 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
                 // hint: not me
                 if (!room->GetNeighbour(RoomNeighbour::Left) &&
                     desiredMovementThisFrame.X < 0 &&
-                    desiredPosInRoom.X < -halfRoomWidthWithWall)
+                    desiredPosInRoom.X < leftWallPos)
                 {
-                    desiredMovementThisFrame.X = 0;// (-halfRoomWidthWithWall) - desiredPosInRoom.X;
+                    desiredMovementThisFrame.X = 0;
                     m_isMoving = false;
 
                 }
 
                 if (!room->GetNeighbour(RoomNeighbour::Right) &&
                     desiredMovementThisFrame.X > 0 &&
-                    desiredPosInRoom.X > halfRoomWidthWithWall)
+                    desiredPosInRoom.X > rightWallPos)
                 {
-                    desiredMovementThisFrame.X = 0;// halfRoomWidthWithWall - desiredPosInRoom.X;
+                    desiredMovementThisFrame.X = 0;
                     m_isMoving = false;
                 }
             }            

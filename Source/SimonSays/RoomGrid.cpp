@@ -140,22 +140,30 @@ void ARoomGrid::SetNeighbours()
         {
             if (auto* room = m_roomGrid[gridX][gridY])
             {
-                if (gridX - 1 >= 0)
+                // left
+                if (gridX - 1 >= 0 &&
+                    room->HasDoorToTheLeft())
                 {
                     room->SetNeighbour(m_roomGrid[gridX - 1][gridY], RoomNeighbour::Left);
                 }
 
-                if (gridX + 1 < m_width)
+                // right
+                if (gridX + 1 < m_width &&
+                    room->HasDoorToTheRight())
                 {
                     room->SetNeighbour(m_roomGrid[gridX + 1][gridY], RoomNeighbour::Right);
                 }
 
-                if (gridY - 1 > 0)
+                // down
+                if (gridY - 1 > 0 &&
+                    room->HasLadderDown())
                 {
                     room->SetNeighbour(m_roomGrid[gridX][gridY - 1], RoomNeighbour::Down);
                 }
 
-                if (gridY + 1 < m_height)
+                // up
+                if (gridY + 1 < m_height &&
+                    room->HasLadderUp())
                 {
                     room->SetNeighbour(m_roomGrid[gridX][gridY + 1], RoomNeighbour::Up);
                 }
