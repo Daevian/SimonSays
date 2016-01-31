@@ -134,7 +134,6 @@ bool ARoomGrid::SetRoom(ARoom* room, int gridX, int gridY)
 void ARoomGrid::SetNeighbours()
 {
     for (int gridX = 0; gridX < m_width; gridX++)
-
     {
         for (int gridY = 0; gridY < m_height; gridY++)
         {
@@ -155,7 +154,7 @@ void ARoomGrid::SetNeighbours()
                 }
 
                 // up
-                if (gridY - 1 > 0 &&
+                if (gridY - 1 >= 0 &&
                     room->HasLadderUp())
                 {
                     room->SetNeighbour(m_roomGrid[gridX][gridY - 1], RoomNeighbour::Up);
