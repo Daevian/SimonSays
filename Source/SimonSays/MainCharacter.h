@@ -53,6 +53,8 @@ public:
 
     FORCEINLINE class UPaperFlipbookComponent* GetSprite() const { return m_sprite; }
 
+    FVector GetRelativePositionInRoom() const;
+
 private:
     void UpdateCharacter();
     void UpdateDirection();
@@ -63,6 +65,6 @@ private:
     
     ARoom* m_currentRoom = nullptr;
 
-	FString m_debugStr;
+    FString m_debugStr;
     
 };

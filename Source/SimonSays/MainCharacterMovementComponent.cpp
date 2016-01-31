@@ -3,6 +3,7 @@
 #include "SimonSays.h"
 #include "MainCharacterMovementComponent.h"
 #include "MainCharacter.h"
+#include "Room.h"
 
 
 
@@ -42,14 +43,19 @@ void UMainCharacterMovementComponent::TickComponent(float deltaTime, enum ELevel
             m_direction = FacingDirection::Right;
         }
 
-        //if (m_character)
-        //{
-        //    if (auto* room = m_character->GetCurrentRoom())
-        //    {
-        //        // lock to floor
-        //        room->GetFloorX();
-        //    }
-        //}
+        if (m_character)
+        {
+            if (auto* room = m_character->GetCurrentRoom())
+            {
+                const float c_wallXPos = 30.0f;
+                FVector posInRoom = m_character->GetRelativePositionInRoom();
+                if (!room->GetNeighbour(RoomNeighbour::Left))
+                {
+                    
+                }
+            }            
+
+        }
 
         FHitResult hit;
         MoveUpdatedComponent(desiredMovementThisFrame, UpdatedComponent->GetComponentRotation().Quaternion(), true, &hit);
