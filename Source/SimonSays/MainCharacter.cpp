@@ -121,11 +121,11 @@ void AMainCharacter::SetCurrentRoom(ARoom* room)
         float floorZ = m_currentRoom->GetFloorZ();
         FVector location = GetActorLocation();
         location.Z = floorZ;
-#if WITH_EDITORONLY_DATA
-        location += this->PivotOffset;
-#else
-        location += FVector(0.0f, 0.0f, 100.0); // hack - hardcoded pivot offset
-#endif
+//#if WITH_EDITORONLY_DATA
+//        location += this->PivotOffset;
+//#else
+//        location += FVector(0.0f, 0.0f, 100.0); // hack - hardcoded pivot offset
+//#endif
         SetActorLocation(location);
     }
 }
